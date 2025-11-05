@@ -1,0 +1,505 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+    <title>EHS Training Handbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Basic styles -->
+  <style>
+    :root {
+      --bg:#f5f7fa; --card:#ffffff; --ink:#111827; --muted:#64748b;
+      --primary:#007e7a; --chip:#e2e8f0; --line:#e5e7eb;
+    }
+    * { box-sizing: border-box; }
+
+    html,body {
+      margin:0;
+      padding:0;
+      font-family: Inter, system-ui, Arial;
+      background:var(--bg); color:var(--ink);
+    }
+
+    header {
+      background:#007e7a;
+      color:#fff;
+      padding:18px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header .brand img.logo {
+      height: 60px;
+      width: auto;
+      border-radius: 6px; /* opsional */
+    }
+
+    header .brand {
+      font-size:22px;
+      font-weight:700;
+    }
+
+    header .who {
+      font-size:14px;
+      opacity:.9;
+    }
+
+    .wrap {
+      max-width:1200px;
+      margin:24px auto;
+      padding:0 16px;
+    }
+
+    /* Row: search + category dropdown */
+    .searchrow {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 12px;
+      align-items: center;
+      margin-top: 0;
+    }
+
+    /* Search bar tetap sama */
+    .searchbar {
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      height:50px;
+      display:flex;
+      align-items:center;
+      padding:0 16px;
+    }
+
+    .searchbar input {
+      border:0;
+      outline:none;
+      flex:1;
+      font-size:16px;
+    }
+
+
+    /* Dropdown kategori */
+    .catwrap select {
+      width: 100%;
+      height: 50px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 0 14px;
+      font-size: 15px;
+      outline: none;
+      appearance: none;
+        background-image:
+          linear-gradient(45deg, transparent 50%, #64748b 50%),
+          linear-gradient(135deg, #64748b 50%, transparent 50%),
+          linear-gradient(to right, #e5e7eb, #e5e7eb);
+        background-position:
+          calc(100% - 22px) calc(50% - 4px),
+          calc(100% - 16px) calc(50% - 4px),
+          calc(100% - 40px) 50%;
+      background-size: 6px 6px, 6px 6px, 1px 60%;
+      background-repeat: no-repeat;
+    }
+
+    /* Grid & Card + animasi */
+    .grid {
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:20px; margin-top:20px;
+    }
+  @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 640px)  {
+    .grid { grid-template-columns: 1fr; }
+    .searchrow { grid-template-columns: 1fr; }
+  }
+
+    .card {
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      display:flex;
+      gap:16px;
+      transform: translateY(6px);
+      opacity: 0;
+      animation: fadeUp .4s ease forwards;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(2,8,23,0.08);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    /* Keyframes muncul */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Tombol: Animasi */
+  .btn { transition: transform .08s ease, box-shadow .2s ease; }
+  .btn:active { transform: scale(0.98); }
+  .btn.primary:hover { box-shadow: 0 6px 16px rgba(59,130,246,.25); }
+
+  /* Hilangkan style chips lama (opsional bisa dihapus total) */
+  .chips { display: none !important; }
+
+    .thumb {
+      width: 90px;
+      height: 120px;
+      background: #f1f5f9;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    .thumb:hover {
+      transform: scale(1.05);
+      transition: 0.3s;
+    }
+    .meta h3 {
+      margin:2px 0 6px;
+      font-size:18px;
+    }
+    .meta .dim {
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+    .pill {
+      display:inline-block;
+      padding:6px 10px;
+      background:#f1f5f9;
+      border-radius:999px;
+      font-size:12px;
+      margin-bottom:8px;
+    }
+    .actions { display:flex; gap:8px; margin-top:8px; }
+    .btn { padding:8px 12px; border-radius:10px; border:0; cursor:pointer; }
+    .btn.primary { background:var(--primary); color:#fff; }
+    .btn.ghost { background:var(--chip); }
+
+    footer { color:var(--muted); font-size:13px; margin:24px 0; }
+
+    /* ==== PRINT & COPY PROTECTION (best-effort) ==== */
+    @media print { body { display: none !important; } }
+    body { -webkit-user-select: none; user-select: none; }
+    img, iframe { -webkit-user-drag: none; user-drag: none; }
+
+  .pdf-viewer {
+    animation: fadeIn .3s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* modal panel animation */
+  .modal-root .panel { animation: pop .18s ease-out forwards; transform: scale(.98); opacity:0; }
+  @keyframes pop { to { transform: scale(1); opacity:1; } }
+
+  /* Sticky semi-transparent footer (glassmorphism) */
+  .footer-fixed {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 126, 122, 0.75); /* semi-transparent green */
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 14px;
+    z-index: 99999;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.18);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    letter-spacing: 0.2px;
+    font-weight: 500;
+  }
+
+  /* give page bottom padding so content isn't covered by footer */
+  body { padding-bottom: 72px; }
+
+  </style>
+    </head>
+      <body>
+    <header>
+      <div class="brand">
+        <img src="https://lh3.googleusercontent.com/d/1LifQvcLbCkUoLx2FgxCpq4er9V53iN6J=w600" alt="Company Logo" class="logo" />
+        <span>EHS Training Handbook</span>
+      </div>
+      <div class="who" id="who">IGP_Pomalaa</div>
+    </header>
+
+
+      <div class="wrap">
+      <div class="searchrow">
+      <div class="searchbar">
+        <input id="q" placeholder="Search handbook, keyword, tag…" />
+      </div>
+        <div class="catwrap">
+          <select id="catSelect" aria-label="Filter by category">
+            <option value="All">All</option>
+          </select>
+        </div>
+      </div>
+
+    <div class="grid" id="grid"></div>
+
+    <footer>© 2025 RAR • EHS Training</footer>
+  </div>
+
+  <!-- Sticky footer (semi-transparent) -->
+  <div class="footer-fixed" id="footerFixed">
+    © 2025 RAR • EHS Training • Internal Use Only •
+  </div>
+
+  <script>
+    // ==== Basic state ====
+    const state = {
+      q: '', cat: 'All', data: [], cats: []
+    };
+
+    // ==== Security / best-effort controls ====
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      const k = (e.ctrlKey||e.metaKey) && ['p','s','c','x','u'].includes(e.key.toLowerCase());
+      const fkeys = ['Print'].includes(e.key);
+      if (k || fkeys) { e.preventDefault(); e.stopPropagation(); alert('Printing/Copying disabled.'); }
+    });
+    document.addEventListener('dragstart', e => e.preventDefault());
+    document.addEventListener('copy', e => { e.preventDefault(); });
+    window.addEventListener('beforeprint', e => { alert('Printing is disabled.'); });
+
+
+    // ==== Data loading ====
+    function load() {
+      google.script.run.withSuccessHandler(rows => {
+        state.data = rows.map(r => ({
+          Title: r.Title || '',
+          Category: r.Category || 'Uncategorized',
+          Owner: r.Owner || '',
+          Version: r.Version || '',
+          LastUpdated: r.LastUpdated ? new Date(r.LastUpdated).toISOString().slice(0,10) : '',
+          Audience: r.Audience || '',
+          Mandatory: (r.Mandatory || '').toString(),
+          Tags: (r.Tags || '').toString(),
+          DriveLink: r.DriveLink || '',
+          Description: r.Description || '',
+          CoverImage: r.CoverImage || ''
+        }));
+        buildCategoryDropdown();
+        render();
+        showUser();
+      }).getCatalog();
+    }
+
+    function showUser() {
+      // Shows active user email if available (requires domain accounts)
+      google.script.run.withSuccessHandler(email => {
+        document.getElementById('who').textContent = email ? `Logged in: ${email}` : 'Welcome';
+      }).withFailureHandler(()=>{ document.getElementById('who').textContent='Welcome'; })
+      ._getUserEmail();
+    }
+
+    // helper (server-side)
+    function _noop(){}
+
+  </script>
+
+  <script>
+    // Render chips
+function buildCategoryDropdown() {
+  const set = new Set(['All']);
+  state.data.forEach(r => set.add(r.Category || 'Uncategorized'));
+  state.cats = Array.from(set);
+
+  const sel = document.getElementById('catSelect');
+  sel.innerHTML = '';
+  state.cats.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    sel.appendChild(opt);
+  });
+  sel.value = state.cat || 'All';
+
+  sel.onchange = () => {
+    state.cat = sel.value;
+    render(true); // true: trigger animasi ulang
+  };
+}
+
+
+    // Render grid
+function render(withAnimation = false) {
+  const grid = document.getElementById('grid');
+  const q = state.q.toLowerCase();
+  const data = state.data.filter(r => {
+    const byCat = state.cat==='All' || (r.Category===state.cat);
+    const hay = [r.Title,r.Tags,r.Description,r.Audience,r.Owner].join(' ').toLowerCase();
+    const byQ = !q || hay.includes(q);
+    return byCat && byQ;
+  });
+  grid.innerHTML = '';
+
+  data.forEach((r, i) => {
+    const c = card(r);
+    if (withAnimation) {
+      // delay kecil per item untuk efek “stagger”
+      c.style.animationDelay = `${i * 60}ms`;
+    } else {
+      // jika tanpa animasi paksa langsung terlihat
+      c.style.animationDelay = '0ms';
+    }
+    grid.appendChild(c);
+  });
+}
+
+
+// ---------- CARD (ubah: tombol Open memanggil openPDFFromCard) ----------
+function card(r) {
+  const el = document.createElement('div');
+  el.className = 'card';
+  const cover = r.CoverImage
+    ? `<img src="${escapeHtml(r.CoverImage)}" alt="cover" class="thumb" />`
+    : `<div class="thumb"></div>`;
+
+  // safe link fallback
+  const safeLink = r.DriveLink ? r.DriveLink : '#';
+
+  // gunakan openPDFFromCard untuk membuka viewer
+  el.innerHTML = `
+    ${cover}
+    <div class="meta">
+      <h3>${escapeHtml(r.Title)}</h3>
+      <div class="dim">v${escapeHtml(r.Version)} • Updated ${escapeHtml(r.LastUpdated)} • ${escapeHtml(r.Owner)}</div>
+      <div class="pill">${escapeHtml(r.Mandatory)} • ${escapeHtml(r.Audience)}</div><br/>
+      <div class="actions">
+        <button class="btn primary" onclick="openPDFFromCard('${encodeURIComponent(safeLink)}','${escapeHtml(r.Title).replace(/'/g,"\\'")}')">Open</button>
+        <button class="btn ghost" onclick="details(${JSON.stringify(r).replace(/"/g,'&quot;')})">Details</button>
+      </div>
+    </div>
+  `;
+  return el;
+}
+
+
+// helper: convert Drive link to preview link
+function toDrivePreviewUrl(link) {
+  if (!link) return link;
+  try {
+    // 1) /d/FILEID pattern
+    const m = link.match(/\/d\/([^\/?]+)/);
+    if (m && m[1]) return `https://drive.google.com/file/d/${m[1]}/preview`;
+    // 2) open?id=ID or ?id=ID
+    const q = link.match(/[?&]id=([^&]+)/);
+    if (q && q[1]) return `https://drive.google.com/file/d/${q[1]}/preview`;
+    // 3) if link already contains /preview or uc?export=view, use as-is
+    if (link.includes('/preview') || link.includes('uc?export=view')) return link;
+    // fallback to original
+    return link;
+  } catch (e) {
+    return link;
+  }
+}
+
+// buka dari card (dipanggil onclick)
+function openPDFFromCard(encodedLink, title) {
+  const raw = decodeURIComponent(encodedLink || '');
+  openPDF(raw, title);
+}
+
+// openPDF: tampilkan viewer fullscreen di page yang sama
+function openPDF(link, title) {
+  const previewUrl = toDrivePreviewUrl(link || '');
+  const viewer = document.createElement('div');
+  viewer.className = 'pdf-viewer';
+  viewer.style.cssText = `
+    position:fixed; inset:0;
+    background:#0b1220;
+    display:flex;
+    flex-direction:column;
+    z-index:99999;
+  `;
+
+  const heading = title ? title : 'PDF Viewer';
+  viewer.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#0f1724;color:white;">
+      <div style="font-size:18px;font-weight:600;">📘 ${escapeHtml(heading)}</div>
+      <button class="btn ghost" style="background:#334155;color:white;border:1px solid #475569;border-radius:8px;padding:6px 12px;" onclick="closePDF()">← Back</button>
+    </div>
+    <iframe src="${previewUrl}" style="flex:1;width:100%;border:0;background:white;"></iframe>
+  `;
+
+  document.body.appendChild(viewer);
+}
+
+
+// close pdf viewer
+function closePDF() {
+  const viewer = document.querySelector('.pdf-viewer');
+  if (viewer) viewer.remove();
+}
+
+//
+// DETAILS
+//
+function details(r) {
+  // Buat tampilan modal tanpa tombol Open
+  const html = `
+    <div class="modal-root" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;">
+      <div class="panel" style="background:#fff;border-radius:18px;max-width:900px;width:90%;padding:18px;overflow-y:auto;max-height:90vh;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h2 style="margin:0">${escapeHtml(r.Title)}</h2>
+          <button class="btn ghost" onclick="this.closest('.modal-root').remove()">Close</button>
+        </div>
+        <div style="color:#64748b;font-size:14px;margin:4px 0 12px;">
+          Version ${escapeHtml(r.Version)} • Updated ${escapeHtml(r.LastUpdated)} • Owner: ${escapeHtml(r.Owner)}
+        </div>
+
+        <p style="margin-top:10px;font-size:16px;color:#111827;">
+          ${escapeHtml(r.Description)}
+        </p>
+
+        <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;">
+          <div class="pill">Category: ${escapeHtml(r.Category)}</div>
+          <div class="pill">Audience: ${escapeHtml(r.Audience)}</div>
+          <div class="pill">Tags: ${escapeHtml(r.Tags)}</div>
+        </div>
+
+        <!-- hanya tombol Close (tidak ada Open di detail) -->
+      </div>
+    </div>
+  `;
+  const wrap = document.createElement('div');
+  wrap.innerHTML = html;
+  document.body.appendChild(wrap);
+}
+
+
+    function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+document.getElementById('q').addEventListener('input', e => {
+  state.q = e.target.value;
+  render(true); // render dengan animasi setiap filter berubah
+});
+
+    // Kickoff
+    load();
+  </script>
+  <script>
+    // Tiny server shim: get user email
+    google.script.run
+      .withSuccessHandler(function(){ /* noop */ })
+      .withFailureHandler(function(){ /* noop */ })
+      ._ensureUserShim = true;
+  </script>
+</body>
+</html>
